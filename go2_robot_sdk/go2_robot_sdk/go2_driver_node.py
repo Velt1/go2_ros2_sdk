@@ -146,8 +146,8 @@ class RobotBaseNode(Node):
     def cmd_vel_cb(self, msg, robot_num):
         x = msg.linear.x
         y = msg.linear.y
-        z = msg.linear.z
-
+        z = msg.angular.z * 2.0
+        
         if abs(x) > 0.1 or abs(y) > 0.1 or abs(z) > 0.1:
             self.robot_cmd_vel[robot_num] = gen_mov_command(round(x, 2), round(y, 2), round(z, 2))
 
