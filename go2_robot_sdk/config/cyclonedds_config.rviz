@@ -55,7 +55,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /robot0/robot_description
+        Value: /robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -71,155 +71,155 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        robot0/FL_calf:
+        FL_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FL_calflower:
+        FL_calflower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FL_calflower1:
+        FL_calflower1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FL_foot:
+        FL_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FL_hip:
+        FL_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FL_thigh:
+        FL_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_calf:
+        FR_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_calflower:
+        FR_calflower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_calflower1:
+        FR_calflower1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_foot:
+        FR_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_hip:
+        FR_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/FR_thigh:
+        FR_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/Head_lower:
+        Head_lower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/Head_upper:
+        Head_upper:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_calf:
+        RL_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_calflower:
+        RL_calflower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_calflower1:
+        RL_calflower1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_foot:
+        RL_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_hip:
+        RL_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RL_thigh:
+        RL_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_calf:
+        RR_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_calflower:
+        RR_calflower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_calflower1:
+        RR_calflower1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_foot:
+        RR_foot:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_hip:
+        RR_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/RR_thigh:
+        RR_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/base_footprint:
+        base_footprint:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        robot0/base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        robot0/front_camera:
+        base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        robot0/imu:
+        front_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        robot0/radar:
+          Value: true
+        imu:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        radar:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -261,7 +261,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /robot0/point_cloud2
+        Value: /point_cloud2
       Use Fixed Frame: true
       Use rainbow: true
       Value: true

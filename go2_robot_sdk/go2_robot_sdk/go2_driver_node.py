@@ -80,11 +80,11 @@ class RobotBaseNode(Node):
         self.imu_pub = []
 
         for i in range(len(self.robot_ip_lst)):
-            self.joint_pub.append(self.create_publisher(JointState, f'robot{i}/joint_states', qos_profile))
-            self.go2_state_pub.append(self.create_publisher(Go2State, f'robot{i}/go2_states', qos_profile))
-            self.go2_lidar_pub.append(self.create_publisher(PointCloud2, f'robot{i}/point_cloud2', qos_profile))
-            self.go2_odometry_pub.append(self.create_publisher(Odometry, f'robot{i}/odom', qos_profile))
-            self.imu_pub.append(self.create_publisher(IMU, f'robot{i}/imu', qos_profile))
+            self.joint_pub.append(self.create_publisher(JointState, f'joint_states', qos_profile))
+            self.go2_state_pub.append(self.create_publisher(Go2State, f'go2_states', qos_profile))
+            self.go2_lidar_pub.append(self.create_publisher(PointCloud2, f'point_cloud2', qos_profile))
+            self.go2_odometry_pub.append(self.create_publisher(Odometry, f'odom', qos_profile))
+            self.imu_pub.append(self.create_publisher(IMU, f'imu', qos_profile))
         
         self.broadcaster = TransformBroadcaster(self, qos=qos_profile)
 
@@ -99,7 +99,7 @@ class RobotBaseNode(Node):
         for i in range(len(self.robot_ip_lst)):
             self.create_subscription(
                 Twist,
-                f'robot{str(i)}/cmd_vel',
+                f'cmd_vel',
                 lambda msg: self.cmd_vel_cb(msg, str(i)),
                 qos_profile)
                     
@@ -158,7 +158,7 @@ class RobotBaseNode(Node):
         odom_trans = TransformStamped()
         odom_trans.header.stamp = self.get_clock().now().to_msg()
         odom_trans.header.frame_id = 'odom'
-        odom_trans.child_frame_id = f"robot0/base_link"
+        odom_trans.child_frame_id = 'base_link'
         odom_trans.transform.translation.x = msg.pose.position.x
         odom_trans.transform.translation.y = msg.pose.position.y
         odom_trans.transform.translation.z = msg.pose.position.z + 0.07
@@ -172,10 +172,10 @@ class RobotBaseNode(Node):
         joint_state = JointState()
         joint_state.header.stamp = self.get_clock().now().to_msg()
         joint_state.name = [
-                    f'robot0/FL_hip_joint', f'robot0/FL_thigh_joint', f'robot0/FL_calf_joint',
-                    f'robot0/FR_hip_joint', f'robot0/FR_thigh_joint', f'robot0/FR_calf_joint',
-                    f'robot0/RL_hip_joint', f'robot0/RL_thigh_joint', f'robot0/RL_calf_joint',
-                    f'robot0/RR_hip_joint', f'robot0/RR_thigh_joint', f'robot0/RR_calf_joint',
+                    f'FL_hip_joint', f'FL_thigh_joint', f'FL_calf_joint',
+                    f'FR_hip_joint', f'FR_thigh_joint', f'FR_calf_joint',
+                    f'RL_hip_joint', f'RL_thigh_joint', f'RL_calf_joint',
+                    f'RR_hip_joint', f'RR_thigh_joint', f'RR_calf_joint',
                     ]
         joint_state.position = [
             msg.motor_state[3].q, msg.motor_state[4].q, msg.motor_state[5].q,
@@ -186,7 +186,7 @@ class RobotBaseNode(Node):
         self.joint_pub[0].publish(joint_state) 
 
     def publish_lidar_cyclonedds(self, msg):
-        msg.header = Header(frame_id="robot0/radar")
+        msg.header = Header(frame_id="radar")
         msg.header.stamp = self.get_clock().now().to_msg()
         self.go2_lidar_pub[0].publish(msg)
 
@@ -235,7 +235,7 @@ class RobotBaseNode(Node):
                 odom_trans = TransformStamped()
                 odom_trans.header.stamp = self.get_clock().now().to_msg()
                 odom_trans.header.frame_id = 'odom'
-                odom_trans.child_frame_id = f"robot{str(i)}/base_link"
+                odom_trans.child_frame_id = 'base_link'
                 odom_trans.transform.translation.x = self.robot_odom[str(i)]['data']['pose']['position']['x']
                 odom_trans.transform.translation.y = self.robot_odom[str(i)]['data']['pose']['position']['y']
                 odom_trans.transform.translation.z = self.robot_odom[str(i)]['data']['pose']['position']['z'] + 0.07
@@ -251,7 +251,7 @@ class RobotBaseNode(Node):
                 odom_msg = Odometry()
                 odom_msg.header.stamp = self.get_clock().now().to_msg()
                 odom_msg.header.frame_id = 'odom'
-                odom_msg.child_frame_id = f"robot{str(i)}/base_link"
+                odom_msg.child_frame_id = 'base_link'
                 odom_msg.pose.pose.position.x = self.robot_odom[str(i)]['data']['pose']['position']['x']
                 odom_msg.pose.pose.position.y = self.robot_odom[str(i)]['data']['pose']['position']['y']
                 odom_msg.pose.pose.position.z = self.robot_odom[str(i)]['data']['pose']['position']['z'] + 0.07
@@ -334,10 +334,10 @@ class RobotBaseNode(Node):
                     )
                 
                 joint_state.name = [
-                    f'robot{str(i)}/FL_hip_joint', f'robot{str(i)}/FL_thigh_joint', f'robot{str(i)}/FL_calf_joint',
-                    f'robot{str(i)}/FR_hip_joint', f'robot{str(i)}/FR_thigh_joint', f'robot{str(i)}/FR_calf_joint',
-                    f'robot{str(i)}/RL_hip_joint', f'robot{str(i)}/RL_thigh_joint', f'robot{str(i)}/RL_calf_joint',
-                    f'robot{str(i)}/RR_hip_joint', f'robot{str(i)}/RR_thigh_joint', f'robot{str(i)}/RR_calf_joint',
+                    f'/FL_hip_joint', f'/FL_thigh_joint', f'/FL_calf_joint',
+                    f'/FR_hip_joint', f'/FR_thigh_joint', f'/FR_calf_joint',
+                    f'/RL_hip_joint', f'/RL_thigh_joint', f'/RL_calf_joint',
+                    f'/RR_hip_joint', f'/RR_thigh_joint', f'/RR_calf_joint',
                     ]
                 joint_state.position = [
                     FL_hip_joint, FL_thigh_joint, FL_calf_joint,

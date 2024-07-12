@@ -35,7 +35,7 @@ amcl:
     update_min_d: 0.25
     z_hit: 0.5
     z_max: 0.05
-    z_rand: 0.5
+    z_rand: 0.1
     z_short: 0.05
     scan_topic: /scan
     set_initial_pose: true
@@ -44,15 +44,6 @@ amcl:
       y: 0.0
       z: 0.0
       yaw: 0.0
-
-
-amcl_map_client:
-  ros__parameters:
-    use_sim_time: False
-
-amcl_rclcpp_node:
-  ros__parameters:
-    use_sim_time: False
 
 bt_navigator:
   ros__parameters:
@@ -73,6 +64,7 @@ bt_navigator:
     - nav2_follow_path_action_bt_node
     - nav2_spin_action_bt_node
     - nav2_wait_action_bt_node
+    - nav2_assisted_teleop_action_bt_node
     - nav2_back_up_action_bt_node
     - nav2_drive_on_heading_bt_node
     - nav2_clear_costmap_service_bt_node
@@ -97,6 +89,7 @@ bt_navigator:
     - nav2_path_expiring_timer_condition
     - nav2_distance_traveled_condition_bt_node
     - nav2_single_trigger_bt_node
+    - nav2_goal_updated_controller_bt_node
     - nav2_is_battery_low_condition_bt_node
     - nav2_navigate_through_poses_action_bt_node
     - nav2_navigate_to_pose_action_bt_node
@@ -109,6 +102,7 @@ bt_navigator:
     - nav2_wait_cancel_bt_node
     - nav2_spin_cancel_bt_node
     - nav2_back_up_cancel_bt_node
+    - nav2_assisted_teleop_cancel_bt_node
     - nav2_drive_on_heading_cancel_bt_node
 
 bt_navigator_navigate_through_poses_rclcpp_node:
@@ -124,7 +118,7 @@ controller_server:
     use_sim_time: False
     controller_frequency: 20.0
     min_x_velocity_threshold: 0.001
-    min_y_velocity_threshold: 0.5
+    min_y_velocity_threshold: 0.001
     min_theta_velocity_threshold: 0.001
     failure_tolerance: 0.3
     progress_checker_plugin: "progress_checker"
@@ -153,11 +147,11 @@ controller_server:
       debug_trajectory_details: True
       min_vel_x: 0.0
       min_vel_y: 0.0
-      max_vel_x: 0.30
+      max_vel_x: 0.30 #changed
       max_vel_y: 0.0
-      max_vel_theta: 1.0
+      max_vel_theta: 1.0 #changed
       min_speed_xy: 0.0
-      max_speed_xy: 0.30
+      max_speed_xy: 0.30 #changed
       min_speed_theta: 0.0
       # Add high threshold velocity for turtlebot 3 issue.
       # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
@@ -193,7 +187,7 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 10.0
+      update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
       robot_base_frame: base_link
@@ -202,12 +196,12 @@ local_costmap:
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.4
+      # footprint: "[ [0.360, 0.500], [0.360, -0.200], [-0.800, -0.200], [-0.800, 0.500] ]"
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        inflation_radius: 0.2
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -228,6 +222,7 @@ local_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
           obstacle_min_range: 1.5
+
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -350,10 +345,10 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.26, 0.0, 1.0]
-    min_velocity: [-0.26, 0.0, -1.0]
-    max_accel: [2.5, 0.0, 3.2]
-    max_decel: [-2.5, 0.0, -3.2]
+    max_velocity: [0.25, 0.0, 0.5]
+    min_velocity: [0.0, 0.0, -0.5]
+    max_accel: [2.5, 2.5, 3.2]
+    max_decel: [-2.5, -2.5, -3.2]
     odom_topic: /odom
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]

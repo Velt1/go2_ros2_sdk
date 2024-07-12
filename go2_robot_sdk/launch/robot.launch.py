@@ -28,7 +28,7 @@ from launch.conditions import UnlessCondition
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import FrontendLaunchDescriptionSource
+from launch.launch_description_sources import FrontendLaunchDescriptionSource, PythonLaunchDescriptionSource
 
 
 def generate_launch_description():
@@ -50,7 +50,7 @@ def generate_launch_description():
     if conn_type == 'cyclonedds':
         rviz_config = "cyclonedds_config.rviz"
 
-    urdf_file_name = 'multi_go2.urdf'
+    urdf_file_name = 'go2.urdf'
     urdf = os.path.join(
         get_package_share_directory('go2_robot_sdk'),
         "urdf",
@@ -58,12 +58,14 @@ def generate_launch_description():
     with open(urdf, 'r') as infp:
         robot_desc = infp.read()
 
-    robot_desc_modified_lst = []
+    # robot_desc_modified_lst = []
 
-    for i in range(len(robot_ip_lst)):
-        robot_desc_modified_lst.append(robot_desc.format(robot_num=f"robot{i}"))
+    # for i in range(len(robot_ip_lst)):
+    #     robot_desc_modified_lst.append(robot_desc.format(robot_num=f"robot{i}"))
 
     urdf_launch_nodes = []
+    
+
 
     joy_params = os.path.join(
         get_package_share_directory('go2_robot_sdk'), 
@@ -81,17 +83,17 @@ def generate_launch_description():
     )
 
     # TODO Need to fix Nav2
-    # slam_toolbox_config = os.path.join(
-    #     get_package_share_directory('go2_robot_sdk'),
-    #     'config',
-    #     'mapper_params_online_async.yaml'
-    # )
+    slam_toolbox_config = os.path.join(
+        get_package_share_directory('go2_robot_sdk'),
+        'config',
+        'mapper_params_online_async.yaml'
+    )
 
-    # nav2_config = os.path.join(
-    #     get_package_share_directory('go2_robot_sdk'),
-    #     'config',
-    #     'nav2_params.yaml'
-    # )
+    nav2_config = os.path.join(
+        get_package_share_directory('go2_robot_sdk'),
+        'config',
+        'nav2_params.yaml'
+    )
 
     for i in range(len(robot_ip_lst)):
         urdf_launch_nodes.append(
@@ -100,8 +102,7 @@ def generate_launch_description():
                 executable='robot_state_publisher',
                 name='robot_state_publisher',
                 output='screen',
-                namespace=f"robot{i}",
-                parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_desc_modified_lst[i]}],
+                parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_desc}],
                 arguments=[urdf]
             ),
         )
@@ -119,10 +120,11 @@ def generate_launch_description():
             executable='pointcloud_to_laserscan_node',
             name='pointcloud_to_laserscan',
             remappings=[
-                ('cloud_in', f'robot{i}/point_cloud2'),
+                ('cloud_in', f'point_cloud2'),
+                #('scan', f'scan'),
             ],
             parameters=[{
-                'target_frame': f'robot{i}/base_link',
+                'target_frame': f'base_link',
             }]
         ),
         )
@@ -171,7 +173,7 @@ def generate_launch_description():
                 {'use_sim_time': use_sim_time},
                 default_config_topics
             ],
-            remappings=[('/cmd_vel_out', 'robot0/cmd_vel')]
+            remappings=[('/cmd_vel_out', 'cmd_vel')]
         ),
 
         IncludeLaunchDescription(
@@ -180,23 +182,23 @@ def generate_launch_description():
 
 
         # TODO Need to fix Nav2
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         os.path.join(get_package_share_directory('slam_toolbox'), 'launch', 'online_async_launch.py')
-        #     ]),
-        #     launch_arguments={
-        #         'params_file': slam_toolbox_config,
-        #         'use_sim_time': use_sim_time,
-        #     }.items(),
-        # ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                os.path.join(get_package_share_directory('slam_toolbox'), 'launch', 'online_async_launch.py')
+            ]),
+            launch_arguments={
+                'params_file': slam_toolbox_config,
+                'use_sim_time': use_sim_time,
+            }.items(),
+        ),
 
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         os.path.join(get_package_share_directory('nav2_bringup'), 'launch', 'navigation_launch.py')
-        #     ]),
-        #     launch_arguments={
-        #         'params_file': nav2_config,
-        #         'use_sim_time': use_sim_time,
-        #     }.items(),
-        # ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                os.path.join(get_package_share_directory('nav2_bringup'), 'launch', 'navigation_launch.py')
+            ]),
+            launch_arguments={
+                'params_file': nav2_config,
+                'use_sim_time': use_sim_time,
+            }.items(),
+        ),
     ])

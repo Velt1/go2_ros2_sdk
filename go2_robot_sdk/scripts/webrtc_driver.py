@@ -32,7 +32,8 @@ import json
 import logging
 import struct
 
-from aiortc import RTCPeerConnection, RTCSessionDescription
+import asyncio
+from aiortc import RTCPeerConnection, RTCSessionDescription, RTCConfiguration, RTCIceServer
 from aiortc.contrib.media import MediaBlackhole
 
 from scripts.go2_lidar_decoder import LidarDecoder
@@ -45,6 +46,10 @@ logger.setLevel(logging.INFO)
 
 decoder = LidarDecoder()
 
+configuration = RTCConfiguration([
+    RTCIceServer(urls="stun:stun.l.google.com:19302"),  # Google STUN-Server
+    # Füge hier weitere ICE-Server hinzu, falls benötigt
+])
 
 class Go2Connection():
     def __init__(
@@ -57,7 +62,7 @@ class Go2Connection():
             on_open=None
             ):
         
-        self.pc = RTCPeerConnection()
+        self.pc = RTCPeerConnection(configuration)
         self.robot_ip = robot_ip
         self.robot_num = str(robot_num)
         self.token = token
@@ -69,15 +74,27 @@ class Go2Connection():
         self.audio_track = MediaBlackhole()
         self.video_track = MediaBlackhole()
         
-        self.data_channel = self.pc.createDataChannel("data", id=0)
-        self.data_channel.on("open", self.on_data_channel_open)
-        self.data_channel.on("message", self.on_data_channel_message)
+        self.setup_data_channel()
         
         self.pc.on("track", self.on_track)
         self.pc.on("connectionstatechange", self.on_connection_state_change)
 
     def on_connection_state_change(self):
         logger.info(f"Connection state is {self.pc.connectionState}")
+        if self.pc.connectionState == "closed":
+            logger.error("Connection failed, attempting to reconnect...")
+            asyncio.create_task(self.reconnect())
+
+    async def reconnect(self):
+        await self.pc.close()
+        self.pc = RTCPeerConnection(configuration)
+        self.setup_data_channel()
+        await self.connect()
+
+    def setup_data_channel(self):
+        self.data_channel = self.pc.createDataChannel("data", id=0)
+        self.data_channel.on("open", self.on_data_channel_open)
+        self.data_channel.on("message", self.on_data_channel_message)
 
     def on_track(self, track):
         logger.info(f"Receiving {track.kind}")

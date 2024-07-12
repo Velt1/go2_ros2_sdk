@@ -53,7 +53,7 @@ class LidarToPointCloud(Node):
             # Subscribe to the PointCloud2 topic
             self.subscription = self.create_subscription(
                 PointCloud2,
-                f'/robot{i}/point_cloud2',
+                f'/point_cloud2',
                 self.lidar_callback,
                 10
             )

@@ -20,7 +20,7 @@ slam_toolbox:
     # if you'd like to immediately start continuing a map at a given pose
     # or at the dock, but they are mutually exclusive, if pose is given
     # will use pose
-    map_file_name: /home/brimo/Desktop/final/go2_ros2_sdk/room_serial
+    # map_file_name: /home/max/ros2_ws/room_serial
     # map_start_pose: [0.0, 0.0, 0.0]
     map_start_at_dock: true
 
